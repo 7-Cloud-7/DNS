@@ -1,0 +1,29 @@
+version: '3.3'
+services:
+  asir_bind9_2:
+    container_name: asir_bind9_2
+    image: internetsystemsconsortium/bind9:9.16
+    networks:
+      asir_bind9_subnet2:
+        ipv4_address: 11.1.2.10
+    ports:
+      - 5300:53/udp
+      - 5300:53/tcp
+    volumes:
+      - /home/asir2a/Escritorio/SRI/DNS_2(Alpine-bind9)/DNSbind9/conf:/etc/bind
+      - /home/asir2a/Escritorio/SRI/DNS_2(Alpine-bind9)/DNSbind9/zonas:/var/lib/bind
+
+  asir_cliente_2:
+    container_name: asir_cliente_2
+    image: alpine
+    networks:
+      - asir_bind9_subnet2
+
+    stdin_open: true
+    tty: true #docker run -t
+    dns:
+      - 11.1.2.10 #ip del contenedor DNS
+    
+networks:
+    asir_bind9_subnet2:
+      external: true
