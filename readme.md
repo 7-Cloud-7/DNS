@@ -143,3 +143,45 @@ Cliente con herramientas de red:
 docker exec -it asir_bind9_2 sh
 apt install net-tools
 ~~~
+
+## Procedimiento de creación de servicios (contenedor)
+Usar el comando "docker-compose up" con el siguiente archivo docker-compose.yml:
+~~~
+version: '3.3'
+services:
+asir_bind9_2:
+container_name: asir_bind9_2
+image: internetsystemsconsortium/bind9:9.16
+~~~
+
+## Modificación de la configuración, arranque y parada de servicio bind9
+
+Para arrancar los contenedores usaremos el comando "docker-compose up" y para detenerlos "docker-compose down"
+
+### Archivos de configuración:
+
+named.conf :
+~~~
+include "/etc/bind/named.conf.options";
+include "/etc/bind/named.conf.local";
+~~~
+
+named.conf.local :
+~~~
+zone "clouddomain.com." {
+        type master;
+        file "/var/lib/bind/db.clouddomain.com";
+        notify explicit;
+};
+~~~
+
+named.conf.options :
+~~~
+options {
+        directory "/var/cache/bind";
+        forwarders {
+            8.8.8.8;
+            8.8.4.4;
+        };
+};
+~~~
